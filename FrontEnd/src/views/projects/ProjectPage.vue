@@ -49,8 +49,8 @@ onBeforeMount(async () => {
   text-align: center;
 }
 
-.pictures{
-}
+/* .pictures{
+} */
 .information{
   text-align: left;
   width: 50%;
