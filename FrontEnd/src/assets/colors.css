@@ -1,0 +1,21 @@
+:root{
+    /* colors */
+    --background-color: #000000;
+    --cards: #1F1F1F;
+    --primary-text: #FFFFFF;
+    --secondary-text: #B3B3B3;
+    --green: #00C853;
+    --blue: #2979FF;
+    --red: #FF1744;
+    --orange: #FF6D00;
+}
+html{
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter';
+}

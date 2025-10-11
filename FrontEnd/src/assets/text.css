@@ -1,0 +1,15 @@
+.header_list{
+    font-weight: 400;
+    font-size: 1.2rem;
+    color: var(--primary-text);
+    text-decoration: none;
+}
+.emphasize{
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--primary-text);
+}
+
+p,h1,h2{
+    color: var(--primary-text);
+}
