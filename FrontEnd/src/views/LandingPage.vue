@@ -84,8 +84,6 @@ onMounted(async () => {
     data.value = res.data
 })
 
-console.log('TEst data',data)
-
 function scrollToCategory() {
     const el = document.getElementById("categories");
     if (el) {

@@ -4,7 +4,7 @@
         <div>
             <div class="user-container">
                 <div class="user-pic">
-                    <img src="" alt="pic">
+                    <img src="/Landing Page/User.svg" alt="pic" class="user-dummy">
                     <p>{{ user }}</p>
                 </div>
                 <div class="navigation-container">
@@ -46,6 +46,22 @@ onBeforeMount(async () => {
         console.error('error fetching: ', e)
     }
 })
-
-
 </script>
+
+<style scoped>
+.user-pic{
+    display: flex;
+    flex-direction: column;
+    max-width: 220px;
+    border-radius: 28px;
+    border: 1px solid var(--secondary-text);
+    background-color: var(--background-color);
+    text-align: center;
+
+    justify-content: center;
+    align-items: center;  
+}
+.user-dummy{
+    max-width: 150px;
+}
+</style>
