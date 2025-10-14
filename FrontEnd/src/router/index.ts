@@ -11,6 +11,7 @@ import PrivacyPage from '@/views/misc/Privacy.vue'
 import TermsOfConditionPage from '@/views/misc/TermsOfCondition.vue'
 import ProfilePage from '@/views/user/Profile.vue'
 import ProjectPage from '@/views/projects/ProjectPage.vue'
+import OffersPage from '@/views/OffersPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +24,7 @@ const router = createRouter({
     { path: '/aboutus', name: 'AboutUs', component: AboutUsPage },
     { path: '/privacy', name: 'Privacy', component: PrivacyPage },
     { path: '/termsofservice', name: 'Terms', component: TermsOfConditionPage },
+    { path: '/offers' , name: 'Offers', component: OffersPage},
     {
       path: '/profile/:id',
       name: 'Profile',
