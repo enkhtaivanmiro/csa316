@@ -14,7 +14,7 @@
         Нэвтрэх
       </router-link>
 
-      <router-link v-else :to="`/profile/${id}`" class="login-button header_list">
+      <router-link v-else :to="`/profile/${userID}`" class="login-button header_list">
         {{ username }}
       </router-link>
     </div>

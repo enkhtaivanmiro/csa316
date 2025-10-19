@@ -9,16 +9,16 @@
                 </div>
                 <ul class="navigation-container">
                     <li>
-                        <RouterLink to="/myprojects">Миний мэдээлэл</RouterLink>
+                        <RouterLink :to="`/profile/${userID}`">Миний мэдээлэл</RouterLink>
                     </li>
                     <li>
-                        <RouterLink to="/myprojects">Миний төслүүд</RouterLink>
+                        <RouterLink :to="`/profile/${userID}/myprojects`">Миний төслүүд</RouterLink>
                     </li>
                     <li>
-                        <RouterLink to="/myprojects">Миний санхүү</RouterLink>
+                        <RouterLink :to="`/profile/${userID}/sales`">Миний орлого</RouterLink>
                     </li>
                     <li>
-                        <RouterLink to="/myprojects">Төсөл оруулах</RouterLink>
+                        <RouterLink :to="`/profile/${userID}/create`">Төсөл оруулах</RouterLink>
                     </li>
                     <li>
                         <button @click="logout" class="logout">Гарах</button>
@@ -54,6 +54,7 @@ const router = useRouter()
 
 const user = ref(null)
 const email = ref(null)
+const userID = ref(null)
 
 const token = localStorage.getItem('authToken')
 
@@ -65,7 +66,11 @@ onBeforeMount(async () => {
         const decoded = jwtDecode(token)
         const userID = decoded.sub
         console.log(decoded)
-        const res = await api.get(`/users/${userID}`)
+        const res = await api.get(`/users/${userID}`,{
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        })
 
         user.value = res.data.username
         email.value = res.data.email

@@ -12,6 +12,7 @@ import TermsOfConditionPage from '@/views/misc/TermsOfCondition.vue'
 import ProfilePage from '@/views/user/Profile.vue'
 import ProjectPage from '@/views/projects/ProjectPage.vue'
 import OffersPage from '@/views/OffersPage.vue'
+import UploadProject from '@/views/user/UploadProject.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,18 +25,11 @@ const router = createRouter({
     { path: '/aboutus', name: 'AboutUs', component: AboutUsPage },
     { path: '/privacy', name: 'Privacy', component: PrivacyPage },
     { path: '/termsofservice', name: 'Terms', component: TermsOfConditionPage },
-    { path: '/offers', name: 'Offers', component: OffersPage},
-    {
-      path: '/profile/:id',
-      name: 'Profile',
-      component: ProfilePage,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/item/:id',
-      name: 'Item',
-      component: ProjectPage
-    }
+    { path: '/offers', name: 'Offers', component: OffersPage },
+    { path: '/profile/:id', name: 'Profile', component: ProfilePage, meta: { requiresAuth: true } },
+    { path: '/profile/:id/create', name: 'CreateProject', component: UploadProject, meta: { requeresAuth: true } },
+    { path: '/item/:id', name: 'Item', component: ProjectPage },
+
 
   ],
 })
