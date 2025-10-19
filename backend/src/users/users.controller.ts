@@ -5,24 +5,29 @@ import { RegisterUserDto } from './register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ForgotPasswordDto, ResetPasswordDto } from './dto/forgot-password.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 @ApiTags('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: UsersService) {
     return this.usersService.uploadFile(file);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Get all users id and username' })
   @Get()
   async findAll() {
     return this.usersService.findAll();
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Get single user id and username' })
   @Get(':id')
   async findOne(@Param('id') id: string) {

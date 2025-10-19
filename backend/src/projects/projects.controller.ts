@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post,  } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put,  } from '@nestjs/common';
 import { ApiOperation, ApiBody } from '@nestjs/swagger';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
-import { getProjectDto } from './dto/getSingleProject.dto';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('projects')
 export class ProjectsController {
@@ -27,6 +28,8 @@ export class ProjectsController {
           }
         }
       })
+    
+    @UseGuards(AuthGuard('jwt'))
     @ApiOperation({ summary: 'Create project' })
     @Post()
     async createProject(@Body() createProjectDto: CreateProjectDto) {
@@ -37,5 +40,23 @@ export class ProjectsController {
     @Get(':id')
     async findOne(@Param('id') id: string) {
       return this.projectsService.getProject({ id: Number(id) });
+    }
+
+    @ApiBody({
+      schema: {
+        example: {
+          title: 'sample title',
+          description: 'this is a sample',
+          category_id: 'foreign key to category_id',
+          file_url: 'link',
+          thumbnail_url: 'link',
+          is_active: 'boolean true/false'
+        }
+      }
+    })
+    @UseGuards(AuthGuard('jwt'))
+    @Put(':id')
+    async editProject(@Param('id') id: string, @Body() body: any) {
+      return this.projectsService.editProject(+id, body);
     }
 }
