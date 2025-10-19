@@ -144,7 +144,7 @@ export class UsersService {
     }
 
     const payload = { sub: user.id, username: user.username };
-    const token = this.jwtService.sign(payload);
+    const token = this.jwtService.sign(payload, {expiresIn: '7d'});
 
     return {
       message: 'successful',
