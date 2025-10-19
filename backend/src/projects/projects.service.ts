@@ -6,6 +6,8 @@ import { UUID } from 'crypto';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { GetActiveDto } from './dto/get-active.dto';
 import { getProjectDto } from './dto/getSingleProject.dto';
+import { NotFound } from '@aws-sdk/client-s3';
+
 
 
 @Injectable()
@@ -34,5 +36,18 @@ export class ProjectsService {
         }
 
         return project;
+    }
+
+    async editProject(project_id, updateData) {
+        const project = await this.projectsRepository.findOne({where: {id: project_id}});
+
+        if(!project) {
+            throw new NotFoundException('project not found');
+        }
+
+        Object.assign(project, updateData);
+
+        await this.projectsRepository.save(project);
+        return { message: 'updated successfully: ', project};
     }
 }

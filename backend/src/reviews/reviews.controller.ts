@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
 import { ReviewsService } from './reviews.service';
 import { createReviewDto } from './reviews.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('reviews')
 export class ReviewsController {
@@ -13,6 +14,7 @@ export class ReviewsController {
     return this.reviewsService.findAllById(id);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @ApiBody({
     schema: {
       example: {
