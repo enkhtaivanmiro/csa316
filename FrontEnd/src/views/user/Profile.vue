@@ -7,25 +7,9 @@
                     <img src="/Landing Page/User.svg" alt="pic" class="user-dummy">
                     <p id="username">{{ user }}</p>
                 </div>
-                <ul class="navigation-container">
-                    <li>
-                        <RouterLink :to="`/profile/${userID}`">Миний мэдээлэл</RouterLink>
-                    </li>
-                    <li>
-                        <RouterLink :to="`/profile/${userID}/myprojects`">Миний төслүүд</RouterLink>
-                    </li>
-                    <li>
-                        <RouterLink :to="`/profile/${userID}/sales`">Миний орлого</RouterLink>
-                    </li>
-                    <li>
-                        <RouterLink :to="`/profile/${userID}/create`">Төсөл оруулах</RouterLink>
-                    </li>
-                    <li>
-                        <button @click="logout" class="logout">Гарах</button>
-                    </li>
-                </ul>
+                <Userbar></Userbar>
             </div>
-            <div class="info-container">
+            <Info>
                 <div>
                     <p class="text">Хэрэглэгчийн нэр</p>
                     <p class="info">{{ user }}</p>
@@ -34,7 +18,7 @@
                     <p class="text">Цахим шуудан</p>
                     <p class="info">{{ email }}</p>
                 </div>
-            </div>
+            </Info>
         </div>
         <Footer />
     </Background>
@@ -47,6 +31,8 @@ import { useRoute, useRouter } from 'vue-router';
 import Background from '../components/background.vue';
 import Navbar from '../components/navbar.vue';
 import Footer from '../components/footer.vue';
+import Userbar from './component/Userbar.vue';
+import Info from './component/info.vue';
 
 const api = inject('api')
 const route = useRoute()
@@ -54,7 +40,8 @@ const router = useRouter()
 
 const user = ref(null)
 const email = ref(null)
-const userID = ref(null)
+let userID = ref(null)
+
 
 const token = localStorage.getItem('authToken')
 
@@ -64,8 +51,7 @@ onBeforeMount(async () => {
 
     try {
         const decoded = jwtDecode(token)
-        const userID = decoded.sub
-        console.log(decoded)
+        userID = decoded.sub
         const res = await api.get(`/users/${userID}`,{
             headers:{
                 Authorization: `Bearer ${token}`
@@ -123,38 +109,5 @@ function logout(){
 
 .user-dummy {
     max-width: 150px;
-}
-
-.navigation-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    background-color: var(--background-color);
-    max-width: 220px;
-    border-radius: 28px;
-    padding: 20px 20px;
-    border: 1px solid var(--secondary-text);
-}
-
-.navigation-container a {
-    text-decoration: none;
-    color: var(--primary-text);
-}
-
-.navigation-container .logout {
-    background: none;
-    border: none;
-    color: var(--primary-text);
-    font: inherit;
-    cursor: pointer;
-    text-align: left;
-}
-
-.info-container {
-    background-color: var(--background-color);
-    border: 1px solid var(--secondary-text);
-    flex: 1;
-    border-radius: 28px;
-    padding: 30px 30px;
 }
 </style>

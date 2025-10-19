@@ -13,10 +13,13 @@ import ProfilePage from '@/views/user/Profile.vue'
 import ProjectPage from '@/views/projects/ProjectPage.vue'
 import OffersPage from '@/views/OffersPage.vue'
 import UploadProject from '@/views/user/UploadProject.vue'
+import Projects from '@/views/user/Projects.vue'
+import Sales from '@/views/user/Sales.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    //eronhii heseg
     { path: '/', name: 'Landing', component: LandingPage },
     { path: '/register', name: 'Register', component: RegisterPage },
     { path: '/login', name: 'Login', component: LoginPage },
@@ -26,11 +29,15 @@ const router = createRouter({
     { path: '/privacy', name: 'Privacy', component: PrivacyPage },
     { path: '/termsofservice', name: 'Terms', component: TermsOfConditionPage },
     { path: '/offers', name: 'Offers', component: OffersPage },
+
+    //Hereglegchiin medeellin heseg
     { path: '/profile/:id', name: 'Profile', component: ProfilePage, meta: { requiresAuth: true } },
-    { path: '/profile/:id/create', name: 'CreateProject', component: UploadProject, meta: { requeresAuth: true } },
+    { path: '/profile/:id/create', name: 'CreateProject', component: UploadProject, meta: { requiresAuth: true } },
+    { path: '/profile/:id/projects', name: 'Projects', component: Projects, meta: { requiresAuth: true } },
+    { path: '/profile/:id/sales', name: 'Sales', component: Sales, meta: { requiresAuth: true } },
+
+    //tusluudiin heseg
     { path: '/item/:id', name: 'Item', component: ProjectPage },
-
-
   ],
 })
 
