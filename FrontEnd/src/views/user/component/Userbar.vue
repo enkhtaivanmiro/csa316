@@ -71,4 +71,8 @@ onBeforeMount(async () => {
 li:hover {
     background-color: var(--orange);
 }
+
+.navigation-container a.router-link-exact-active {
+    background-color: var(--orange);
+}
 </style>

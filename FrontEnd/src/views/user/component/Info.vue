@@ -11,5 +11,6 @@
     flex: 1;
     border-radius: 28px;
     padding: 30px 30px;
+    overflow-y: auto;
 }
 </style>

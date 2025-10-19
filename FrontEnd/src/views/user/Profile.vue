@@ -3,10 +3,7 @@
         <Navbar />
         <div class="container">
             <div class="user-container">
-                <div class="user-pic">
-                    <img src="/Landing Page/User.svg" alt="pic" class="user-dummy">
-                    <p id="username">{{ user }}</p>
-                </div>
+                <User :user="user"></User>
                 <Userbar></Userbar>
             </div>
             <Info>
@@ -33,6 +30,7 @@ import Navbar from '../components/navbar.vue';
 import Footer from '../components/footer.vue';
 import Userbar from './component/Userbar.vue';
 import Info from './component/info.vue';
+import User from './component/User.vue';
 
 const api = inject('api')
 const route = useRoute()
@@ -72,10 +70,6 @@ function logout(){
 </script>
 
 <style scoped>
-#username {
-    font-size: 1.5rem;
-}
-
 .text {
     color: var(--secondary-text);
     font-size: 0.875rem;
@@ -91,23 +85,5 @@ function logout(){
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
-}
-
-.user-pic {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    max-width: 220px;
-    border-radius: 28px;
-    background-color: var(--background-color);
-    border: 1px solid var(--secondary-text);
-    text-align: center;
-    padding: 1.5rem 0;
-    justify-content: center;
-    align-items: center;
-}
-
-.user-dummy {
-    max-width: 150px;
 }
 </style>
