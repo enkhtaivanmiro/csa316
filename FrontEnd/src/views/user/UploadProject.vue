@@ -10,8 +10,47 @@
                 <Userbar></Userbar>
             </div>
             <Info>
-                <form @submit.prevent = "AddProject" >
-                    
+                <form @submit.prevent="AddProject">
+                    <div class="section">
+                        <label for="title">Төслийн нэр*</label>
+                        <input type="name">
+                    </div>
+
+                    <div class="section">
+                        <label for="description">Төслийн тайлбар</label>
+                        <textarea v-model="description" placeholder="Төслийн тайлбарыг бичнэ үү...."
+                            rows="5"></textarea>
+                    </div>
+
+                    <div class="section">
+                        <label for="category">Төслийн ангилал</label>
+                        <select name="category" id="category">
+                            <option value="">-- Ангилал сонгох --</option>
+                            <option value="development">Хөгжүүлэлтийн хэрэгслүүд</option>
+                            <option value="design">Дизайн ба бүтээлч ажил</option>
+                            <option value="data">Өгөгдөл ба шинжилгээ</option>
+                            <option value="ai">Хиймэл оюун ба машин сургалт</option>
+                            <option value="business">Бизнес ба бүтээмж</option>
+                            <option value="web">Веб хөгжүүлэлт ба хостинг</option>
+                            <option value="security">Аюулгүй байдал ба сүлжээ</option>
+                            <option value="game">Тоглоом хөгжүүлэлт</option>
+                            <option value="education">Боловсрол ба судалгаа</option>
+                            <option value="audio">Аудио ба хөгжмийн үйлдвэрлэл</option>
+                            <option value="cad">3D ба CAD инженерчлэл</option>
+                            <option value="cloud">Cloud ба DevOps хэрэгслүүд</option>
+                        </select>
+                    </div>
+
+                    <div class="section">
+                        <label for="files">Файл оруулах</label>
+                        <input type="file" name="files">
+                    </div>
+                    <div class="section">
+                        <label for="thumbnail">Зураг оруулах</label>
+                        <input type="file" name="thumbnail">
+                    </div>
+
+                    <button type="submit" id="button" class="header_list">Оруулах</button>
                 </form>
             </Info>
         </div>
@@ -25,12 +64,41 @@ import Navbar from '../components/navbar.vue';
 import Info from './component/Info.vue';
 import Userbar from './component/userbar.vue';
 
-async function AddProject(){
+async function AddProject() {
 
 }
 </script>
 
 <style scoped>
+#button {
+    max-width: 200px;
+    margin-left: auto;
+    background-color: var(--green);
+    padding: 0.8rem 1.3rem;
+    border: none;
+    border-radius: 0.5rem;
+    display: block;
+}
+
+#button:hover{
+    filter: brightness(90%);
+    cursor: pointer;
+}
+
+form {
+    color: var(--primary-text);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
 #username {
     font-size: 1.5rem;
 }
