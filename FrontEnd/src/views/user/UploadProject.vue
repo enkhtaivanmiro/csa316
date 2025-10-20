@@ -10,14 +10,9 @@
                 <Userbar></Userbar>
             </div>
             <Info>
-                <div>
-                    <p class="text">Хэрэглэгчийн нэр</p>
-                    <p class="info">{{ user }}</p>
-                </div>
-                <div>
-                    <p class="text">Цахим шуудан</p>
-                    <p class="info">{{ email }}</p>
-                </div>
+                <form @submit.prevent = "AddProject" >
+                    
+                </form>
             </Info>
         </div>
         <Footer />
@@ -27,8 +22,12 @@
 import Background from '../components/background.vue';
 import Footer from '../components/footer.vue';
 import Navbar from '../components/navbar.vue';
-import Info from './component/info.vue';
+import Info from './component/Info.vue';
 import Userbar from './component/userbar.vue';
+
+async function AddProject(){
+
+}
 </script>
 
 <style scoped>

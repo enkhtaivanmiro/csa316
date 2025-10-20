@@ -29,7 +29,7 @@ import Background from '../components/background.vue';
 import Navbar from '../components/navbar.vue';
 import Footer from '../components/footer.vue';
 import Userbar from './component/Userbar.vue';
-import Info from './component/info.vue';
+import Info from './component/Info.vue';
 import User from './component/User.vue';
 
 const api = inject('api')
