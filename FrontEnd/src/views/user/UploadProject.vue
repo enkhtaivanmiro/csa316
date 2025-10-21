@@ -3,17 +3,14 @@
         <Navbar />
         <div class="container">
             <div class="user-container">
-                <div class="user-pic">
-                    <img src="/Landing Page/User.svg" alt="pic" class="user-dummy">
-                    <p id="username">{{ user }}</p>
-                </div>
+                <User :user="user"></User>
                 <Userbar></Userbar>
             </div>
             <Info>
                 <form @submit.prevent="AddProject">
                     <div class="section">
                         <label for="title">Төслийн нэр*</label>
-                        <input type="name">
+                        <input type="text" v-model="title">
                     </div>
 
                     <div class="section">
@@ -24,7 +21,7 @@
 
                     <div class="section">
                         <label for="category">Төслийн ангилал</label>
-                        <select name="category" id="category">
+                        <select name="category" id="category" v-model="category">
                             <option value="">-- Ангилал сонгох --</option>
                             <option value="development">Хөгжүүлэлтийн хэрэгслүүд</option>
                             <option value="design">Дизайн ба бүтээлч ажил</option>
@@ -58,18 +55,76 @@
     </Background>
 </template>
 <script setup>
+import { onBeforeMount, ref } from 'vue';
 import Background from '../components/background.vue';
 import Footer from '../components/footer.vue';
 import Navbar from '../components/navbar.vue';
 import Info from './component/Info.vue';
 import Userbar from './component/userbar.vue';
+import User from './component/User.vue';
+
+import { inject } from 'vue';
+import { jwtDecode } from 'jwt-decode';
+
+const api = inject('api')
+
+const title = ref('')
+const description = ref('')
+const category = ref('')
+let user = ref('')
+
+const token = localStorage.getItem('authToken')
+
+onBeforeMount(async () => {
+    if (!token) return
+
+    const decoded = jwtDecode(token)
+    user.value = decoded.username
+})
+
 
 async function AddProject() {
+    try {
+        const ProjectData = {
+            user_id: userID.value, //udahgui avna,
+            title: title.value,
+            description: description.value,
+            category_id: category.value,
+            file_url: file_url.value,
+            thumbnail_url: thumbnail_url.value,
+            is_active: active.value,
+        }
 
+        const response = await api.post(`/projects`, ProjectData, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            }
+        })
+
+        if (response.status === 201) {
+
+        }
+    } catch (e) {
+        console.error(e)
+    }
 }
 </script>
 
 <style scoped>
+textarea, input[type="text"]{
+    background-color: var(--background-color);
+    border: 1px solid var(--primary-text);
+    border-radius: 0.4rem;
+    padding: 0.5rem;
+    color: var(--primary-text);
+}
+
+textarea{
+    resize: none;
+    height: 200px;
+}
+
 #button {
     max-width: 200px;
     margin-left: auto;
@@ -80,7 +135,7 @@ async function AddProject() {
     display: block;
 }
 
-#button:hover{
+#button:hover {
     filter: brightness(90%);
     cursor: pointer;
 }

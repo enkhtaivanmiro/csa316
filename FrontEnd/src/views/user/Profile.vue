@@ -36,9 +36,9 @@ const api = inject('api')
 const route = useRoute()
 const router = useRouter()
 
-const user = ref(null)
-const email = ref(null)
-let userID = ref(null)
+const user = ref('')
+const email = ref('')
+let userID = ref('')
 
 
 const token = localStorage.getItem('authToken')
