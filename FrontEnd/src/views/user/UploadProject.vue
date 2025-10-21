@@ -71,7 +71,8 @@ const api = inject('api')
 const title = ref('')
 const description = ref('')
 const category = ref('')
-let user = ref('')
+const user = ref('')
+const userID = ref('')
 
 const token = localStorage.getItem('authToken')
 
@@ -80,6 +81,7 @@ onBeforeMount(async () => {
 
     const decoded = jwtDecode(token)
     user.value = decoded.username
+    userID.value = decoded.sub
 })
 
 
@@ -112,7 +114,7 @@ async function AddProject() {
 </script>
 
 <style scoped>
-textarea, input[type="text"]{
+textarea, input[type="text"], select{
     background-color: var(--background-color);
     border: 1px solid var(--primary-text);
     border-radius: 0.4rem;
@@ -151,7 +153,7 @@ form {
 .section {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 0.4rem;
 }
 
 #username {
