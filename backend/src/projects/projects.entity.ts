@@ -17,10 +17,10 @@ export class Projects {
   @Column({ name: 'category_id', type: 'int' })
   category_id: number;
 
-  @Column({ name: 'file_url', type: 'varchar', length: 500 })
+  @Column({ name: 'file_url', type: 'varchar', nullable: true })
   file_url: string;
 
-  @Column({ name: 'thumbnail_url', type: 'text' })
+  @Column({ name: 'thumbnail_url', type: 'text', nullable: true })
   thumbnail_url: string;
 
   @Column({ name: 'is_active', type: 'boolean', default: true })

@@ -12,12 +12,14 @@ export class CreateProjectDto {
 
   @IsNumber()
   category_id: number;
-
+    
+  @IsOptional()
   @IsString()
-  file_url: string;
+  file_url?: string;
 
+  @IsOptional()
   @IsString()
-  thumbnail_url: string;
+  thumbnail_url?: string;
 
   @IsBoolean()
   @IsOptional()
