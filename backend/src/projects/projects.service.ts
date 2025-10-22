@@ -17,9 +17,16 @@ export class ProjectsService {
         private projectsRepository: Repository<Projects>,
     ) {}
 
-    async findAllActive() {
-        return this.projectsRepository.find({ where: { is_active: true } });
+    async findAllActive(category_id?: number) {
+    const where: any = { is_active: true };
+
+    if (category_id && category_id !== 0) {
+        where.category_id = category_id;
     }
+
+    return this.projectsRepository.find({ where });
+    }
+
 
     async createProject(createProjectDto: CreateProjectDto){
         const project = this.projectsRepository.create(createProjectDto);

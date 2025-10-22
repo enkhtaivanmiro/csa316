@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Param, Post, Put, UploadedFiles, UseInterceptors,  } from '@nestjs/common';
-import { ApiOperation, ApiBody } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post, Put, Query, UploadedFiles, UseInterceptors,  } from '@nestjs/common';
+import { ApiOperation, ApiBody, ApiQuery } from '@nestjs/swagger';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UseGuards } from '@nestjs/common';
@@ -12,10 +12,11 @@ export class ProjectsController {
       private readonly s3Service: S3Service,
     ){}
 
-    @ApiOperation({ summary: 'Get all active projects'})
+    @ApiOperation({ summary: 'Get all active projects' })
+    @ApiQuery({ name: 'category_id', required: false, type: Number })
     @Get()
-    async findAllActive(){
-        return this.projectsService.findAllActive();
+    async findAllActive(@Query('category_id') category_id?: number) {
+      return this.projectsService.findAllActive(category_id ? Number(category_id) : undefined);
     }
 
     @ApiBody({
