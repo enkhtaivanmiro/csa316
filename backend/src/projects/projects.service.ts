@@ -52,11 +52,9 @@ export class ProjectsService {
     }
 
     async userProject(user_id: number) {
-        console.log('🔍 Looking for projects with user_id:', user_id);
         const projects = await this.projectsRepository.find({
             where: { user_id },
         });
-        console.log('🧩 Found:', projects);
         if (!projects.length) throw new NotFoundException('No projects found for this user');
         return projects;
     }
