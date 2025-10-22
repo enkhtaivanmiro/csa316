@@ -58,4 +58,5 @@ export class ProjectsService {
         if (!projects.length) throw new NotFoundException('No projects found for this user');
         return projects;
     }
+    //
 }
