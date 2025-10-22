@@ -22,6 +22,9 @@ import { Rental_Pricing } from './rental_pricing/rental_pricing.entity';
 import { S3Service } from './s3/s3.service';
 import { ConfigModule } from '@nestjs/config';
 import { S3Module } from './s3/s3.module';
+import { CategoriesService } from './categories/categories.service';
+import { CategoriesModule } from './categories/categories.module';
+import { Category } from './categories/categories.entity';
 
 @Module({
   imports: [
@@ -31,7 +34,7 @@ import { S3Module } from './s3/s3.module';
       ssl: {
         rejectUnauthorized: false,
       },
-      entities: [User, Projects, Review, Rental_Pricing],
+      entities: [User, Projects, Review, Rental_Pricing, Category],
       synchronize: false,
     }),
 
@@ -45,6 +48,7 @@ import { S3Module } from './s3/s3.module';
     RentalPricingModule,
     ConfigModule.forRoot({ isGlobal: true }),
     S3Module,
+    CategoriesModule,
   ],
   controllers: [
     AppController,
