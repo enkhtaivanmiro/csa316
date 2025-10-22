@@ -55,7 +55,6 @@ async function handleLogin() {
         if (response.status === 200 || response.status === 201) {
             if (response.data && response.data.token) {
                 localStorage.setItem("authToken", response.data.token)
-                localStorage.setItem("username", response.data.username)
             }
             router.push('/')
         }
@@ -77,7 +76,6 @@ async function handleLogin() {
             errorMessage.value = 'Алдаа гарлаа. Дахин оролдоно уу'
         }
     }
-    console.log('User logged in:', { email: email.value, password: password.value })
 }
 </script>
 

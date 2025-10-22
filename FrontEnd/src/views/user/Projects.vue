@@ -49,7 +49,7 @@ onBeforeMount(async () => {
     try {
         const decoded = jwtDecode(token)
         userID = decoded.sub
-        const res = await api.get(`/users/${userID}`,{
+        const res = await api.get(`/projects/${userID}`,{
             headers:{
                 Authorization: `Bearer ${token}`
             }

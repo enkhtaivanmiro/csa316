@@ -3,12 +3,25 @@
     <Navbar />
     <div class="detail-container" v-if="project">
       <div class="pictures">
-        <img :src="project.thumbnail_url" alt="Thumbnail" class="project-img" />
-        <div class="other-pictures">
-          <div>
-            <img :src="project.thumbnail_url" alt="Thumbnail" class="small-img" />
-          </div>
-        </div>
+        <Carousel id="gallery" v-bind="galleryConfig" v-model="currentSlide">
+          <Slide v-for="image in images" :key="image.id">
+            <img :src="image.url" alt="Gallery Image" class="gallery-image" />
+          </Slide>
+        </Carousel>
+
+        <Carousel id="thumbnails" v-bind="thumbnailsConfig" v-model="currentSlide">
+          <Slide v-for="image in images" :key="image.id">
+            <template #default="{ currentIndex, isActive }">
+              <div :class="['thumbnail', { 'is-active': isActive }]" @click="slideTo(currentIndex)">
+                <img :src="image.url" alt="Thumbnail Image" class="thumbnail-image" />
+              </div>
+            </template>
+          </Slide>
+
+          <template #addons>
+            <Navigation />
+          </template>
+        </Carousel>
       </div>
       <div class="information">
         <h1>{{ project.title }}</h1>
@@ -23,41 +36,72 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref, inject } from 'vue'
-import { useRoute } from 'vue-router'
 import Background from '../components/background.vue'
 import Navbar from '../components/navbar.vue'
 import Footer from '../components/footer.vue'
 
+import 'vue3-carousel/carousel.css'
+import { Carousel, Slide, Navigation } from 'vue3-carousel'
+
+import { onBeforeMount, ref, inject } from 'vue'
+import { useRoute } from 'vue-router'
+
 const route = useRoute()
 const api = inject('api')
+
 const project = ref(null)
+const images = ref([])
+
+const currentSlide = ref(0)
+const slideTo = (nextSlide) => (currentSlide.value = nextSlide)
+
+const galleryConfig = {
+  itemsToShow: 1,
+  wrapAround: true,
+  transition: 500,
+}
+
+const thumbnailsConfig = {
+  itemsToShow: 6,
+  wrapAround: true,
+  gap: 10,
+}
 
 onBeforeMount(async () => {
   const id = route.params.id
   const res = await api.get(`/projects/${id}`)
   project.value = res.data
+
+  if (project.value.image_urls?.length) {
+    images.value = project.value.image_urls.map((url, index) => ({
+      id: index + 1,
+      url,
+    }))
+  } else {
+    images.value = [{ id: 1, url: project.value.thumbnail_url }]
+  }
 })
 </script>
 
 <style scoped>
 .detail-container {
   margin-top: 5rem;
+  margin-bottom: 5rem;
   display: flex;
-  flex: 0 0 auto;
   justify-content: space-between;
   text-align: center;
+  align-items: flex-start;
+  gap: 2rem;
 }
 
-.pictures{
-}
-.information{
+.information {
   text-align: left;
   width: 50%;
 }
-.project-img {
-  height: auto;
-  border-radius: 1rem;
+
+.pictures,
+.information {
+  flex: 1;
 }
 
 .desc {
@@ -73,5 +117,38 @@ onBeforeMount(async () => {
   background-color: var(--green);
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
+}
+
+.carousel {
+  --vc-nav-background: rgba(255, 255, 255, 0.7);
+  --vc-nav-border-radius: 100%;
+}
+
+img {
+  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-image {
+  border-radius: 16px;
+}
+
+#thumbnails {
+  margin-top: 10px;
+}
+
+.thumbnail {
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.thumbnail.is-active,
+.thumbnail:hover {
+  opacity: 1;
 }
 </style>

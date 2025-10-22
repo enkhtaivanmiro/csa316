@@ -112,8 +112,6 @@ async function handleRegister() {
             errorMessage.value = 'Алдаа гарлаа. Дахин оролдоно уу'
         }
     }
-    console.log('User registered:', { username: username.value, email: email.value, password: password.value })
-    alert(`Thanks for registering, ${username.value}!`)
 }
 </script>
 

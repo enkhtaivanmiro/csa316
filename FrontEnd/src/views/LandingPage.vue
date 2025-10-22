@@ -24,7 +24,8 @@
         <div class="categeory-container">
             <p class="cards-label">Санал болгох бүтээгдэхүүн</p>
             <div v-if="data && data.length" class="cards-list">
-                <Itemcard v-for="project in data" :title="project.title" :url="project.thumbnail_url" :id="project.id" />
+                <Itemcard v-for="project in data" :title="project.title" :url="project.thumbnail_url"
+                    :id="project.id" />
             </div>
             <div v-else>
                 <p>Одоогоор ямар нэгэн төсөл алга</p>
@@ -52,7 +53,7 @@
                     </div>
                 </div>
             </div>
-            <div class="review-container">
+            <div class="feedback-container">
                 <p class="emphasize">Хэрэглэгчийн сэтгэгдэл</p>
                 <div class="user-card">
                     <p>“Энэ үйлчилгээ, манай бизнест маш их цаг хугацаа, мөнгө хэмнэж чадсан. Маш сэтгэл хангалуун
@@ -83,8 +84,6 @@ onMounted(async () => {
     const res = await api.get('/projects')
     data.value = res.data
 })
-
-console.log('TEst data',data)
 
 function scrollToCategory() {
     const el = document.getElementById("categories");
@@ -150,9 +149,13 @@ h1 {
 }
 
 .categeory-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
     width: 100%;
     text-align: left;
     justify-content: space-between;
+    margin-top: 3rem;
 
 }
 
@@ -168,10 +171,18 @@ h1 {
     text-align: center;
 }
 
+.feedback-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    flex: 1;
+}
+
 .feedbacks {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    margin: 4rem 0;
 }
 
 .benefits-container {

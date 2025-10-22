@@ -14,7 +14,7 @@
         Нэвтрэх
       </router-link>
 
-      <router-link v-else to="/profile" class="login-button header_list">
+      <router-link v-else :to="`/profile/${userID}`" class="login-button header_list">
         {{ username }}
       </router-link>
     </div>
@@ -23,18 +23,21 @@
 </template>
 <script setup>
   import {ref,onMounted} from 'vue'
+  import { jwtDecode } from 'jwt-decode'
   // import { useRouter } from 'vue-router'
 
   // const router = userRouter()
   const username = ref('')
+  const userID = ref(null)
   const auth = ref(false)
   onMounted(()=>{
     const token = localStorage.getItem('authToken')
-    const storedUsername = localStorage.getItem('username')
 
     if(token){
+      const decoded = jwtDecode(token)
       auth.value = true
-      username.value = storedUsername
+      username.value = decoded.username
+      userID.value = decoded.sub
     }
   })
 </script>
