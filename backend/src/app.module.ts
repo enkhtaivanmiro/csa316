@@ -19,6 +19,9 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { Review } from './reviews/review.entity';
 import { RentalPricingModule } from './rental_pricing/rental_pricing.module';
 import { Rental_Pricing } from './rental_pricing/rental_pricing.entity';
+import { S3Service } from './s3/s3.service';
+import { ConfigModule } from '@nestjs/config';
+import { S3Module } from './s3/s3.module';
 
 @Module({
   imports: [
@@ -40,6 +43,8 @@ import { Rental_Pricing } from './rental_pricing/rental_pricing.entity';
     ProjectsModule,
     ReviewsModule,
     RentalPricingModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    S3Module,
   ],
   controllers: [
     AppController,
@@ -47,6 +52,6 @@ import { Rental_Pricing } from './rental_pricing/rental_pricing.entity';
     UsersController,
     ReviewsController,
   ],
-  providers: [AppService, AuthService, ReviewsService],
+  providers: [AppService, AuthService, ReviewsService, S3Service],
 })
 export class AppModule {}
