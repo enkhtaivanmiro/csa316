@@ -10,7 +10,7 @@
                 <form @submit.prevent="AddProject">
                     <div class="section">
                         <label for="title">Төслийн нэр*</label>
-                        <input type="text" v-model="title">
+                        <input type="text" v-model="title" required placeholder="Төслийн нэр........">
                     </div>
 
                     <div class="section">
@@ -23,37 +23,41 @@
                         <label for="category">Төслийн ангилал</label>
                         <select name="category" id="category" v-model="category">
                             <option value="">-- Ангилал сонгох --</option>
-                            <option value="development">Хөгжүүлэлтийн хэрэгслүүд</option>
-                            <option value="design">Дизайн ба бүтээлч ажил</option>
-                            <option value="data">Өгөгдөл ба шинжилгээ</option>
-                            <option value="ai">Хиймэл оюун ба машин сургалт</option>
-                            <option value="business">Бизнес ба бүтээмж</option>
-                            <option value="web">Веб хөгжүүлэлт ба хостинг</option>
-                            <option value="security">Аюулгүй байдал ба сүлжээ</option>
-                            <option value="game">Тоглоом хөгжүүлэлт</option>
-                            <option value="education">Боловсрол ба судалгаа</option>
-                            <option value="audio">Аудио ба хөгжмийн үйлдвэрлэл</option>
-                            <option value="cad">3D ба CAD инженерчлэл</option>
-                            <option value="cloud">Cloud ба DevOps хэрэгслүүд</option>
+                            <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                                {{ cat.name }}
+                            </option>
                         </select>
                     </div>
-
+                    <div class="price-section">
+                        <label for="pricing">Төслийн үнэлгээ:</label>
+                        <select name="pricing" id="price" v-model="period">
+                            <option value="daily">Өдрөөр</option>
+                            <option value="weekly">7 хоногоор</option>
+                            <option value="monthly">Сараар</option>
+                        </select>
+                        <input type="text" v-model="price" placeholder="Үнэ (₮)">
+                    </div>
                     <div class="section">
                         <label for="files">Файл оруулах</label>
-                        <input type="file" name="files">
-                    </div>
-                    <div class="section">
-                        <label for="thumbnail">Зураг оруулах</label>
-                        <input type="file" name="thumbnail">
+                        <input type="file" name="files" @change="handleFileUpload" ref="fileInput">
                     </div>
 
-                    <button type="submit" id="button" class="header_list">Оруулах</button>
+                    <div class="section">
+                        <label for="thumbnail">Зураг оруулах</label>
+                        <input type="file" name="thumbnail" @change="handleThumbnailUpload" ref="thumbnailInput"
+                            accept="image/*">
+                    </div>
+
+                    <button type="submit" id="button" class="header_list">
+                        Оруулах
+                    </button>
                 </form>
             </Info>
         </div>
         <Footer />
     </Background>
 </template>
+
 <script setup>
 import { onBeforeMount, ref } from 'vue';
 import Background from '../components/background.vue';
@@ -62,59 +66,121 @@ import Navbar from '../components/navbar.vue';
 import Info from './component/Info.vue';
 import Userbar from './component/Userbar.vue';
 import User from './component/User.vue';
-
 import { inject } from 'vue';
 import { jwtDecode } from 'jwt-decode';
 
-const api = inject('api')
+const api = inject('api');
+const title = ref('');
+const description = ref('');
+const category = ref('');
+const user = ref('');
+const userID = ref('');
+const file = ref(null);
+const thumbnail = ref(null);
+const fileInput = ref(null);
+const thumbnailInput = ref(null);
 
-const title = ref('')
-const description = ref('')
-const category = ref('')
-const user = ref('')
-const userID = ref('')
+const categories = ref(null)
 
-const token = localStorage.getItem('authToken')
+const period = ref('')
+const price = ref('')
+
+const token = localStorage.getItem('authToken');
 
 onBeforeMount(async () => {
-    if (!token) return
+    if (!token) return;
+    const decoded = jwtDecode(token);
+    user.value = decoded.username;
+    userID.value = decoded.sub;
 
-    const decoded = jwtDecode(token)
-    user.value = decoded.username
-    userID.value = decoded.sub
-})
+    const category = await api.get('/categories')
+    categories.value = category.data
+});
 
+function handleFileUpload(event) {
+    file.value = event.target.files[0];
+}
+
+function handleThumbnailUpload(event) {
+    thumbnail.value = event.target.files[0];
+}
 
 async function AddProject() {
     try {
-        const ProjectData = {
-            user_id: userID.value, //udahgui avna,
-            title: title.value,
-            description: description.value,
-            category_id: category.value,
-            file_url: file_url.value,
-            thumbnail_url: thumbnail_url.value,
-            is_active: active.value,
+        const formData = new FormData();
+
+        formData.append('user_id', userID.value);
+        formData.append('title', title.value);
+        formData.append('description', description.value);
+        formData.append('category_id', category.value);
+        formData.append('is_active', 'true');
+
+        if (file.value) {
+            formData.append('file_url', file.value);
         }
 
-        const response = await api.post(`/projects`, ProjectData, {
+        if (thumbnail.value) {
+            formData.append('thumbnail', thumbnail.value);
+        }
+
+        const ProjectResponse = await api.post('/projects', formData, {
             headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (ProjectResponse.status === 201) {
+            const project_id = ProjectResponse.data.id;
+
+            if (period.value && price.value) {
+                const rentalBody = {
+                    project_id: project_id,
+                    type: period.value,
+                    price: Number(price.value),
+                };
+
+                const rentalResponse = await api.post('/rental-pricing', rentalBody, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (rentalResponse.status === 201) {
+                    alert('Төсөл болон үнэлгээ амжилттай нэмэгдлээ!');
+                } else {
+                    alert('Төсөл үүссэн ч үнэлгээ нэмэхэд алдаа гарлаа.');
+                }
             }
-        })
-
-        if (response.status === 201) {
-
+        
+            title.value = '';
+            description.value = '';
+            category.value = '';
+            file.value = null;
+            thumbnail.value = null;
+            pricing.value = '';
+            price.value = '';
+            if (fileInput.value) fileInput.value.value = '';
+            if (thumbnailInput.value) thumbnailInput.value.value = '';
         }
     } catch (e) {
-        console.error(e)
+        console.error('Алдаа:', e);
+        alert('Төсөл нэмэхэд алдаа гарлаа');
     }
 }
+
 </script>
 
 <style scoped>
-textarea, input[type="text"], select{
+.price-section {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+}
+
+textarea,
+input[type="text"],
+select {
     background-color: var(--background-color);
     border: 1px solid var(--primary-text);
     border-radius: 0.4rem;
@@ -122,7 +188,7 @@ textarea, input[type="text"], select{
     color: var(--primary-text);
 }
 
-textarea{
+textarea {
     resize: none;
     height: 200px;
 }
@@ -147,7 +213,6 @@ form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-
 }
 
 .section {

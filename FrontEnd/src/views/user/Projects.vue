@@ -7,14 +7,11 @@
                 <Userbar></Userbar>
             </div>
             <Info>
-                <div>
-                    <p class="text">Хэрэглэгчийн нэр</p>
-                    <p class="info">{{ user }}</p>
-                </div>
-                <div>
-                    <p class="text">Цахим шуудан</p>
-                    <p class="info">{{ email }}</p>
-                </div>
+                <ul>
+                    <li v-for="value in res" :key="value.id">
+                        <p>{{ value.title }}</p>
+                    </li>
+                </ul>
             </Info>
         </div>
         <Footer />
@@ -38,7 +35,7 @@ const route = useRoute()
 const user = ref('')
 const email = ref('')
 let userID = ref('')
-
+const res = ref([])
 
 const token = localStorage.getItem('authToken')
 
@@ -49,14 +46,14 @@ onBeforeMount(async () => {
     try {
         const decoded = jwtDecode(token)
         userID = decoded.sub
-        const res = await api.get(`/projects/${userID}`,{
-            headers:{
+        console.log(userID)
+        const response = await api.get(`/projects/user/${userID}`, {
+            headers: {
                 Authorization: `Bearer ${token}`
             }
         })
-
-        user.value = res.data.username
-        email.value = res.data.email
+        res.value = response.data
+        console.log(res.data)
     } catch (e) {
         console.error('error fetching: ', e)
     }

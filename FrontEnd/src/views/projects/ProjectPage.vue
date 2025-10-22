@@ -27,6 +27,12 @@
         <h1>{{ project.title }}</h1>
         <p class="desc">{{ project.description }}</p>
         <hr>
+        <div v-if="project.price && project.price.length">
+          <p v-for="p in project.price" :key="p.id">
+            {{ p.price.toLocaleString() }}₮ / {{ p.type }}
+          </p>
+        </div>
+        <p v-else>Үнэ тодорхойлогдоогүй</p>
         <router-link to="/" class="back-button">Буцах</router-link>
       </div>
     </div>
@@ -70,7 +76,11 @@ const thumbnailsConfig = {
 onBeforeMount(async () => {
   const id = route.params.id
   const res = await api.get(`/projects/${id}`)
+  const price = await api.get(`/rental-pricing/project/${id}`)
   project.value = res.data
+  Object.assign(project.value, { price: price.data })
+
+  console.log(project)
 
   if (project.value.image_urls?.length) {
     images.value = project.value.image_urls.map((url, index) => ({
