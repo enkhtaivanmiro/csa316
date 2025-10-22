@@ -68,6 +68,7 @@ defineProps({
 
 .item-button{
     color: var(--secondary-text);
+    text-align: center;
 }
 .item-button:hover{
     text-decoration: none;
