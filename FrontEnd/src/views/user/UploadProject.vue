@@ -60,7 +60,7 @@ import Background from '../components/background.vue';
 import Footer from '../components/footer.vue';
 import Navbar from '../components/navbar.vue';
 import Info from './component/Info.vue';
-import Userbar from './component/userbar.vue';
+import Userbar from './component/Userbar.vue';
 import User from './component/User.vue';
 
 import { inject } from 'vue';
