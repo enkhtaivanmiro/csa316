@@ -34,7 +34,6 @@ import User from './component/User.vue';
 
 const api = inject('api')
 const route = useRoute()
-const router = useRouter()
 
 const user = ref('')
 const email = ref('')
@@ -62,11 +61,6 @@ onBeforeMount(async () => {
         console.error('error fetching: ', e)
     }
 })
-
-function logout(){
-    localStorage.removeItem('authToken')
-    router.push('/')
-}
 </script>
 
 <style scoped>

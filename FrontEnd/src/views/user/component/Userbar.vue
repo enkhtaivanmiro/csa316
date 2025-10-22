@@ -21,6 +21,9 @@
 <script setup>
 import { jwtDecode } from 'jwt-decode';
 import { onBeforeMount, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 
 const userID = ref(null)
 
@@ -40,7 +43,10 @@ onBeforeMount(async () => {
 
 })
 
-
+function logout(){
+    localStorage.removeItem('authToken')
+    router.push('/')
+}
 </script>
 <style scoped>
 .navigation-container {
