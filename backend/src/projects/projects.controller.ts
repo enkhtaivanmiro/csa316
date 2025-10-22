@@ -78,9 +78,8 @@ export class ProjectsController {
       return this.projectsService.editProject(+id, body);
     }
 
-    @Get(':user_id')
+    @Get('user/:user_id')
     async getByUser(@Param('user_id') user_id: string) {
       return this.projectsService.userProject(Number(user_id));
     }
-
 }
