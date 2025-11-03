@@ -33,7 +33,6 @@ const api = inject('api')
 const route = useRoute()
 
 const user = ref('')
-const email = ref('')
 let userID = ref('')
 const res = ref([])
 
@@ -46,7 +45,6 @@ onBeforeMount(async () => {
     try {
         const decoded = jwtDecode(token)
         userID = decoded.sub
-        console.log(userID)
         const response = await api.get(`/projects/user/${userID}`, {
             headers: {
                 Authorization: `Bearer ${token}`

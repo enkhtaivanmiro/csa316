@@ -34,7 +34,7 @@ const router = createRouter({
     //Hereglegchiin medeellin heseg
     { path: '/profile/:id', name: 'Profile', component: ProfilePage, meta: { requiresAuth: true } },
     { path: '/profile/:id/create', name: 'CreateProject', component: UploadProject, meta: { requiresAuth: true } },
-    { path: '/profile/:id/projects', name: 'Projects', component: Projects, meta: { requiresAuth: true } },
+    { path: '/profile/:id/projects', name: 'UserProjects', component: Projects, meta: { requiresAuth: true } },
     { path: '/profile/:id/sales', name: 'Sales', component: Sales, meta: { requiresAuth: true } },
 
     //tusluudiin heseg

@@ -21,7 +21,7 @@
     width: 594px;
     height: 622px;
     left: 50%;
-    top: -311px;
+    top: -450px;
     transform: translateX(-50%);
     background: var(--orange);
     filter: blur(350px);
