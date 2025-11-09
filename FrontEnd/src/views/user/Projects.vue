@@ -8,16 +8,24 @@
             </div>
             <Info>
                 <ul>
-                    <li v-for="value in projects" :key="value.id">
-                        <p>{{ value.title }}</p>
-                        <template v-if="value.price && value.price.length">
-                            <p v-for="p in value.price.price" :key="p.id">
-                                {{ p.price.toLocaleString() }}₮ / {{ p.type }}
+                    <li v-for="value in projects" :key="value.id" class="projects-list">
+                        <div class="project-info">
+                            <p class="title">{{ value.title }}</p>
+                            <p class="price">
+                                <template v-if="value.price && value.price.length">
+                                    <span v-for="p in value.price.price" :key="p.id">
+                                        {{ p.price.toLocaleString() }}₮ / {{ p.type }}
+                                    </span>
+                                </template>
+                                <template v-else>Үнэ ороогүй</template>
                             </p>
-                        </template>
+                        </div>
 
-                        <!-- Show message if price is undefined or empty -->
-                        <p v-else>Үнэ ороогүй</p>
+
+                        <div class="actions">
+                            <router-link to="/edit"><img src="/edit.svg" alt="edit"></router-link>
+                            <button @click="deleteProject(value.id)"><img src="/delete.svg" alt="delete" class="delete"></button>
+                        </div>
                     </li>
                 </ul>
             </Info>
@@ -84,6 +92,20 @@ onBeforeMount(async () => {
         console.error('error fetching: ', e)
     }
 })
+
+async function deleteProject(projectId) {
+    try {
+        const deleteResponse = await api.put(`/projects/${projectId}`, {
+            is_active: false
+        },{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+    }catch(e){
+        console.error("Tusliig ustgahad aldaa garlaa ", e)
+    }
+}
 </script>
 
 <style scoped>
@@ -102,5 +124,43 @@ onBeforeMount(async () => {
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
+}
+
+.project-info {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.title {
+    min-width: 200px;
+}
+
+.price {
+    white-space: nowrap;
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.projects-list {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
 }
 </style>
