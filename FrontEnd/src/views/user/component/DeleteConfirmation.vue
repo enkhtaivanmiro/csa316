@@ -46,7 +46,7 @@ const props = defineProps({
     padding: 20px 30px;
     background-color: var(--background-color);
     border-radius: 0.8rem;
-    /* box-shadow: 0 2px 8px rgba(200, 200, 200, 0.33); */
+    border: 1px solid var(--secondary-text);
     transition: all 0.3s ease;
 }
 

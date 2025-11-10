@@ -1,6 +1,6 @@
 <template>
     <background>
-        
+        <h1>Хөгжүүлэгдэж байгаа</h1>
     </background>
 </template>
 <script setup>
