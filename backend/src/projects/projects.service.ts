@@ -65,4 +65,14 @@ export class ProjectsService {
         if (!projects.length) throw new NotFoundException('No projects found for this user');
         return projects;
     }
+    async deleteProject(project_id: number) {
+    const result = await this.projectsRepository.delete(project_id);
+
+    if (!result.affected) {
+        throw new NotFoundException(`No projects found with this id`);
+    }
+
+    return { deleted: true };
+    }
+
 }
