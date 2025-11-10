@@ -24,8 +24,23 @@
 
                         <div class="actions">
                             <router-link to="/edit"><img src="/edit.svg" alt="edit"></router-link>
-                            <button @click="deleteProject(value.id)"><img src="/delete.svg" alt="delete" class="delete"></button>
+                            <button id="show-modal" @click="showModal = true"><img src="/delete.svg" alt="delete"
+                                    class="delete"></button>
                         </div>
+                        <Teleport to="body">
+                            <modal :show="showModal" @close="showModal = false">
+                                <template #header>
+                                    <h3>Та төслийг устгахдаа итгэлтэй байна уу?</h3>
+                                </template>
+                                <template #body>
+                                    <div class="modal-option">
+                                        <button @click="showModal = false" class="confirmation">Үгүй</button>
+                                        <button @click="deleteProject(value.id)" class="confirmation"
+                                            style="background-color: var(--green);">Тийм</button>
+                                    </div>
+                                </template>
+                            </modal>
+                        </Teleport>
                     </li>
                 </ul>
             </Info>
@@ -36,7 +51,7 @@
 <script setup>
 import { ref, inject, onBeforeMount } from 'vue'
 import { jwtDecode } from 'jwt-decode';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import Background from '../components/background.vue';
 import Navbar from '../components/navbar.vue';
@@ -45,8 +60,13 @@ import Userbar from './component/Userbar.vue';
 import Info from './component/Info.vue';
 import User from './component/User.vue';
 
+import Modal from './component/DeleteConfirmation.vue'
+
 const api = inject('api')
+const router = useRouter()
 const route = useRoute()
+
+const showModal = ref(false)
 
 let user = ref('')
 let userID = ref('')
@@ -87,7 +107,6 @@ onBeforeMount(async () => {
             })
         )
         projects.value = projectPrice
-        console.log(projects.value)
     } catch (e) {
         console.error('error fetching: ', e)
     }
@@ -95,14 +114,14 @@ onBeforeMount(async () => {
 
 async function deleteProject(projectId) {
     try {
-        const deleteResponse = await api.put(`/projects/${projectId}`, {
-            is_active: false
-        },{
+        const deleteResponse = await api.delete(`/projects/${projectId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
-    }catch(e){
+
+        router.go(0)
+    } catch (e) {
         console.error("Tusliig ustgahad aldaa garlaa ", e)
     }
 }
@@ -162,5 +181,18 @@ button {
     border: none;
     cursor: pointer;
     padding: 0;
+}
+
+.confirmation {
+    background-color: var(--red);
+    color: var(--primary-text);
+    padding: 0.5rem 0.7rem;
+    border-radius: 0.5rem;
+}
+
+.modal-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 </style>
