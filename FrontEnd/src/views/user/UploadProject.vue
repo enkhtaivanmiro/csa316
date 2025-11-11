@@ -28,15 +28,24 @@
                             </option>
                         </select>
                     </div>
-                    <div class="price-section">
-                        <label for="pricing">Төслийн үнэлгээ:</label>
-                        <select name="pricing" id="price" v-model="period">
-                            <option value="daily">Өдрөөр</option>
-                            <option value="weekly">7 хоногоор</option>
-                            <option value="monthly">Сараар</option>
-                        </select>
-                        <input type="text" v-model="price" placeholder="Үнэ (₮)">
-                    </div>
+
+                    <ul>
+                        <li v-for="(item, index) in list" :key="index" class="price-section">
+                            <label>Төслийн үнэлгээ {{ index + 1 }}:</label>
+                            <select v-model="item.period">
+                                <option value="daily">Өдрөөр</option>
+                                <option value="weekly">7 хоногоор</option>
+                                <option value="monthly">Сараар</option>
+                            </select>
+                            <input type="text" v-model="item.price" placeholder="Үнэ (₮)" />
+                            <button type="button" @click="deleteSection(index)" :disabled="list.length === 1"
+                                class="delete-button"><img src="/delete.svg" alt="хасах"></button>
+                        </li>
+
+                        <button type="button" @click="addSection">Нэмэх</button>
+
+                    </ul>
+
                     <div class="section">
                         <label for="files">Файл оруулах</label>
                         <input type="file" name="files" @change="handleFileUpload" ref="fileInput">
@@ -84,6 +93,8 @@ const categories = ref(null)
 
 const period = ref('')
 const price = ref('')
+
+const list = ref([{ period: 'daily', price: '' }])
 
 const token = localStorage.getItem('authToken');
 
@@ -152,7 +163,7 @@ async function AddProject() {
                     alert('Төсөл үүссэн ч үнэлгээ нэмэхэд алдаа гарлаа.');
                 }
             }
-        
+
             title.value = '';
             description.value = '';
             category.value = '';
@@ -167,6 +178,13 @@ async function AddProject() {
         console.error('Алдаа:', e);
         alert('Төсөл нэмэхэд алдаа гарлаа');
     }
+}
+
+async function addSection() {
+    list.value.push({ period: 'daily', price: '' })
+}
+async function deleteSection(index) {
+    list.value.splice(index, 1)
 }
 
 </script>
@@ -258,5 +276,11 @@ form {
 
 .user-dummy {
     max-width: 150px;
+}
+
+.delete-button {
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
 }
 </style>
