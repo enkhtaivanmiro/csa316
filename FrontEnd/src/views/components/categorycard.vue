@@ -5,7 +5,7 @@
         </div>
         <div class="title-container">
             <p class="title">{{ title }}</p>
-            <router-link :to="`/item/${id}`" class="item-button">
+            <router-link :to="`/catergories/${catname}`" class="item-button">
                 Сонирхох
             </router-link>
         </div>
@@ -16,7 +16,7 @@
 defineProps({
     title: String,
     url: String,
-    id: [String, Number]
+    catname: [String, Number]
 })
 
 

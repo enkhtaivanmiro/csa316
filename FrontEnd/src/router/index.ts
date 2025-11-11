@@ -15,6 +15,7 @@ import OffersPage from '@/views/OffersPage.vue'
 import UploadProject from '@/views/user/UploadProject.vue'
 import Projects from '@/views/user/Projects.vue'
 import Sales from '@/views/user/Sales.vue'
+import ProjectList from '@/views/projects/ProjectList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,10 +34,11 @@ const router = createRouter({
     //Hereglegchiin medeellin heseg
     { path: '/profile/:id', name: 'Profile', component: ProfilePage, meta: { requiresAuth: true } },
     { path: '/profile/:id/create', name: 'CreateProject', component: UploadProject, meta: { requiresAuth: true } },
-    { path: '/profile/:id/projects', name: 'Projects', component: Projects, meta: { requiresAuth: true } },
+    { path: '/profile/:id/projects', name: 'UserProjects', component: Projects, meta: { requiresAuth: true } },
     { path: '/profile/:id/sales', name: 'Sales', component: Sales, meta: { requiresAuth: true } },
 
     //tusluudiin heseg
+    {path: '/projects', name: 'Projects', component: ProjectList},
     { path: '/item/:id', name: 'Item', component: ProjectPage },
   ],
 })

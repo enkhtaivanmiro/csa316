@@ -18,7 +18,7 @@
         <div id="categories" class="categeory-container">
             <p class="cards-label">Санал болгох ангилал</p>
             <div class="cards-list">
-                <Itemcard v-for="n in 5" :key="n" :title="`Card number ${n}`" />
+                <Categorycard v-for="category in categories" :title="category.name" />
             </div>
         </div>
         <div class="categeory-container">
@@ -74,15 +74,22 @@
 import Background from './components/background.vue';
 import Navbar from './components/navbar.vue';
 import Itemcard from './components/itemcard.vue';
+import Categorycard from './components/categorycard.vue';
 import Footer from './components/footer.vue';
+
 import { onMounted, inject, ref } from 'vue';
 
 const api = inject('api')
-const data = ref(null)
+const data = ref('')
+const categories = ref('')
 
 onMounted(async () => {
+    const category = await api.get('/categories')
+    categories.value = category.data
+        .sort(() => 0.5 - Math.random()).slice(0, 5)
     const res = await api.get('/projects')
     data.value = res.data
+        .sort(() => 0.5 - Math.random()).slice(0, 5)
 })
 
 function scrollToCategory() {
@@ -142,10 +149,14 @@ h1 {
 
 .intro-button {
     padding: 1rem 1.5rem;
-    background-color: var(--green);
+    background-color: var(--orange);
     color: var(--primary-text);
     text-decoration: none;
     border-radius: 0.5rem;
+    border: none;
+}
+.intro-button:hover{
+    cursor: pointer;
 }
 
 .categeory-container {
