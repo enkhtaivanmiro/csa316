@@ -42,7 +42,7 @@
                                 class="delete-button"><img src="/delete.svg" alt="хасах"></button>
                         </li>
 
-                        <button type="button" @click="addSection">Нэмэх</button>
+                        <button type="button" @click="addSection" :disabled="list.length === 3">Нэмэх</button>
 
                     </ul>
 
