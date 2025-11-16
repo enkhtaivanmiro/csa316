@@ -23,7 +23,7 @@
 
 
                         <div class="actions">
-                            <router-link to="/edit"><img src="/edit.svg" alt="edit"></router-link>
+                            <router-link :to="`/projects/edit/${value.id}`"><img src="/edit.svg" alt="edit"></router-link>
                             <button id="show-modal" @click="showModal = true"><img src="/delete.svg" alt="delete"
                                     class="delete"></button>
                         </div>
