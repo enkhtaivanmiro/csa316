@@ -12,7 +12,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/users.entity';
 import { ProjectsController } from './projects/projects.controller';
 import { ProjectsModule } from './projects/projects.module';
-import { Projects } from './projects/projects.entity';
+import { Project } from './projects/projects.entity';
+import { Subscription } from './subscription/entities/subscription.entity'
 import { ReviewsController } from './reviews/reviews.controller';
 import { ReviewsService } from './reviews/reviews.service';
 import { ReviewsModule } from './reviews/reviews.module';
@@ -25,6 +26,7 @@ import { S3Module } from './s3/s3.module';
 import { CategoriesService } from './categories/categories.service';
 import { CategoriesModule } from './categories/categories.module';
 import { Category } from './categories/categories.entity';
+import { SubscriptionModule } from './subscription/subscription.module';
 
 @Module({
   imports: [
@@ -34,7 +36,7 @@ import { Category } from './categories/categories.entity';
       ssl: {
         rejectUnauthorized: false,
       },
-      entities: [User, Projects, Review, Rental_Pricing, Category],
+      entities: [User, Project, Review, Rental_Pricing, Category, Subscription],
       synchronize: false,
     }),
 
@@ -49,6 +51,7 @@ import { Category } from './categories/categories.entity';
     ConfigModule.forRoot({ isGlobal: true }),
     S3Module,
     CategoriesModule,
+    SubscriptionModule,
   ],
   controllers: [
     AppController,
