@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Projects } from './projects.entity'
+import { Project } from './projects.entity'
 import { Repository } from 'typeorm';
 import { UUID } from 'crypto';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -13,8 +13,8 @@ import { NotFound } from '@aws-sdk/client-s3';
 @Injectable()
 export class ProjectsService {
     constructor(
-        @InjectRepository(Projects)
-        private projectsRepository: Repository<Projects>,
+        @InjectRepository(Project)
+        private projectsRepository: Repository<Project>,
     ) {}
 
     async findAllActive(category_id?: number) {
