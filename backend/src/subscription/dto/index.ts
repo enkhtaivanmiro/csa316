@@ -7,6 +7,7 @@ import {
   IsArray,
   ValidateNested,
   IsPositive,
+  IsIn,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -25,9 +26,9 @@ export class CreateSubscriptionDto {
   @IsNotEmpty()
   project_id: number;
 
-  @IsOptional()
-  @IsDateString()
-  renewal_date?: string;
+  @IsNotEmpty()
+  @IsIn(['daily', 'weekly', 'monthly'])
+  length: 'daily' | 'weekly' | 'monthly';
 }
 
 export class UpdateSubscriptionDto {
@@ -47,9 +48,9 @@ export class UpdateStatusDto {
 }
 
 export class RenewSubscriptionDto {
-  @IsDateString()
   @IsNotEmpty()
-  renewal_date: string;
+  @IsIn(['daily', 'weekly', 'monthly'])
+  length: 'daily' | 'weekly' | 'monthly';
 }
 
 export class BulkCreateSubscriptionDto {

@@ -29,42 +29,65 @@ export class SubscriptionService {
     private readonly projectRepository: Repository<Project>,
   ) {}
 
-  async create(createDto: CreateSubscriptionDto) {
-    const user = await this.userRepository.findOne({
-      where: { id: createDto.user_id },
-    });
-    if (!user) {
-      throw new BadRequestException(
-        `User with ID ${createDto.user_id} does not exist`,
-      );
-    }
-
-    const project = await this.projectRepository.findOne({
-      where: { id: createDto.project_id },
-    });
-    if (!project) {
-      throw new BadRequestException(
-        `Project with ID ${createDto.project_id} does not exist`,
-      );
-    }
-
-    const existingSubscription = await this.subscriptionRepository.findOne({
-      where: {
-        user_id: createDto.user_id,
-        project_id: createDto.project_id,
-        status: SubscriptionStatus.ACTIVE,
-      },
-    });
-
-    if (existingSubscription) {
-      throw new ConflictException(
-        'User already has an active subscription to this project',
-      );
-    }
-
-    const subscription = this.subscriptionRepository.create(createDto);
-    return this.subscriptionRepository.save(subscription);
+async create(createDto: CreateSubscriptionDto) {
+  const user = await this.userRepository.findOne({
+    where: { id: createDto.user_id },
+  });
+  if (!user) {
+    throw new BadRequestException(
+      `User with ID ${createDto.user_id} does not exist`,
+    );
   }
+
+  const project = await this.projectRepository.findOne({
+    where: { id: createDto.project_id },
+  });
+  if (!project) {
+    throw new BadRequestException(
+      `Project with ID ${createDto.project_id} does not exist`,
+    );
+  }
+
+  const existingSubscription = await this.subscriptionRepository.findOne({
+    where: {
+      user_id: createDto.user_id,
+      project_id: createDto.project_id,
+      status: SubscriptionStatus.ACTIVE,
+    },
+  });
+
+  if (existingSubscription) {
+    throw new ConflictException(
+      'User already has an active subscription to this project',
+    );
+  }
+
+  const now = new Date();
+  let renewalDate: Date;
+
+  switch (createDto.length) {
+    case 'daily':
+      renewalDate = new Date(now.setDate(now.getDate() + 1));
+      break;
+    case 'weekly':
+      renewalDate = new Date(now.setDate(now.getDate() + 7));
+      break;
+    case 'monthly':
+      renewalDate = new Date(now.setMonth(now.getMonth() + 1));
+      break;
+    default:
+      throw new BadRequestException('Invalid subscription length');
+  }
+
+  const subscription = this.subscriptionRepository.create({
+    ...createDto,
+    renewal_date: renewalDate,
+    status: SubscriptionStatus.ACTIVE,
+  });
+
+  return this.subscriptionRepository.save(subscription);
+}
+
 
   async findAll(query: SubscriptionQueryDto) {
     const {
@@ -140,7 +163,22 @@ export class SubscriptionService {
   async renew(id: number, renewDto: RenewSubscriptionDto) {
     const subscription = await this.findOne(id);
 
-    subscription.renewal_date = new Date(renewDto.renewal_date);
+    const now = new Date();
+
+    switch (renewDto.length) {
+      case 'daily':
+        subscription.renewal_date = new Date(now.setDate(now.getDate() + 1));
+        break;
+      case 'weekly':
+        subscription.renewal_date = new Date(now.setDate(now.getDate() + 7));
+        break;
+      case 'monthly':
+        subscription.renewal_date = new Date(now.setMonth(now.getMonth() + 1));
+        break;
+      default:
+        throw new Error('Invalid subscription length');
+    }
+
     subscription.status = SubscriptionStatus.ACTIVE;
 
     return this.subscriptionRepository.save(subscription);

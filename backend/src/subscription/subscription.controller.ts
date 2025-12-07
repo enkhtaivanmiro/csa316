@@ -41,7 +41,7 @@ export class SubscriptionController {
       example: {
         user_id: 12,
         project_id: 55,
-        renewal_date: '2025-02-01T00:00:00Z',
+        length: 'monthly',
       },
     },
   })
@@ -120,7 +120,7 @@ export class SubscriptionController {
   @ApiBody({
     schema: {
       example: {
-        renewal_date: '2025-04-10T00:00:00Z',
+        length: 'monthly', 
       },
     },
   })
@@ -130,6 +130,7 @@ export class SubscriptionController {
   ) {
     return this.subscriptionService.renew(id, renewDto);
   }
+
 
   @Post(':id/cancel')
   @ApiOperation({ summary: 'Cancel subscription' })
