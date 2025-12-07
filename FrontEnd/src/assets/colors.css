@@ -5,9 +5,10 @@
     --primary-text: #FFFFFF;
     --secondary-text: #B3B3B3;
     --green: #00C853;
-    --blue: #2979FF;
+    --blue: #0092FF;
     --red: #FF1744;
     --orange: #FF6D00;
+    --purple: #EC00FF;
 }
 html{
   font-size: 16px;

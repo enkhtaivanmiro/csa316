@@ -20,15 +20,12 @@
                 <p>Бүртгэлгүй хэрэглэгч? <RouterLink to="/register" id="register">Бүртгүүлэх</RouterLink>
                 </p>
             </div>
-            <div class="footer"></div>
-            <Footer />
         </div>
     </Background>
 </template>
 
 <script setup>
 import Background from './components/background.vue'
-import Footer from './components/footer.vue'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { inject } from 'vue'
@@ -131,12 +128,13 @@ input[type="password"]:focus {
 }
 
 #button {
-    background-color: var(--green);
+    background-color: var(--orange);
     padding: 1rem 1.5rem;
     border: none;
     border-radius: 0.5rem;
     margin: 20px auto;
     display: block;
+    cursor: pointer;
 }
 
 #forgot-password {

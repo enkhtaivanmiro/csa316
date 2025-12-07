@@ -1,8 +1,68 @@
 <template>
     <background>
-        <h1>Хөгжүүлэгдэж байгаа</h1>
+        <Navbar />
+        <div class="container">
+            <div class="user-container">
+                <User :user="user"></User>
+                <Userbar></Userbar>
+            </div>
+            <Info>
+                <template v-if="rentedProjects.length === 0">
+                    <p>Түрээсэлсэн төсөл одоогоор байхгүй</p>
+                </template>
+                <template v-else>
+
+                </template>
+            </Info>
+        </div>
     </background>
 </template>
 <script setup>
 import background from '../components/background.vue';
+import Navbar from '../components/navbar.vue';
+import Info from './component/Info.vue';
+import User from './component/User.vue';
+import Userbar from './component/Userbar.vue';
+
+import { ref, onBeforeMount, inject} from 'vue';
+import { useRoute } from 'vue-router';
+import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
+
+const api = inject('api')
+
+const route = useRoute();
+const user = ref('')
+const userID = ref('')
+const token = localStorage.getItem('authToken')
+
+const rentedProjects = ref([])
+
+onBeforeMount(async () => {
+    const id = route.params.id
+    if (!token) return
+
+    try {
+        const decoded = jwtDecode(token)
+        user.value = decoded.username
+        userID.value = decoded.sub
+
+        const rentedResponse = await api.get(`/subscription/user/${id}`)
+        rentedProjects.value = rentedProjects.data
+    } catch (e) {
+        console.error('error fetching: ', e)
+    }
+})
 </script>
+<style scoped>
+.container {
+    display: flex;
+    margin: 50px 60px;
+    gap: 50px;
+}
+.user-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+</style>
