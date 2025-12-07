@@ -10,6 +10,9 @@
             <RouterLink :to="`/profile/${userID}/sales`">Миний орлого</RouterLink>
         </li>
         <li>
+            <RouterLink :to="`/profile/${userID}/rented`">Миний түрээсэлсэн</RouterLink>
+        </li>
+        <li>
             <RouterLink :to="`/profile/${userID}/create`">Төсөл оруулах</RouterLink>
         </li>
         <li>

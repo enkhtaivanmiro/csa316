@@ -5,7 +5,7 @@
         </div>
         <div class="title-container">
             <p class="title">{{ title }}</p>
-            <router-link :to="`/catergories/${catname}`" class="item-button">
+            <router-link :to="`/categories/${catname}`" class="item-button">
                 Сонирхох
             </router-link>
         </div>
