@@ -33,7 +33,7 @@
           </p>
         </div>
         <p v-else>Үнэ тодорхойлогдоогүй</p>
-        <router-link to="/" class="back-button">Буцах</router-link>
+        <router-link to="/" class="back-button">Түрээслэх</router-link>
       </div>
     </div>
     <div v-else class="loading">Төслийг ачааллаж байна...</div>

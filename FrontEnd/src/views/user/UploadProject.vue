@@ -79,11 +79,13 @@ import { inject } from 'vue';
 import { jwtDecode } from 'jwt-decode';
 
 const api = inject('api');
+
+const user = ref('');
+const userID = ref('');
+
 const title = ref('');
 const description = ref('');
 const category = ref('');
-const user = ref('');
-const userID = ref('');
 const file = ref(null);
 const thumbnail = ref(null);
 const fileInput = ref(null);
@@ -144,36 +146,34 @@ async function AddProject() {
         if (ProjectResponse.status === 201) {
             const project_id = ProjectResponse.data.id;
 
-            if (period.value && price.value) {
-                const rentalBody = {
-                    project_id: project_id,
-                    type: period.value,
-                    price: Number(price.value),
-                };
+            for (const item of list.value) {
+                if (item.period && item.price) {
+                    const rentalBody = {
+                        project_id: project_id,
+                        type: item.period,
+                        price: Number(item.price)
+                    };
 
-                const rentalResponse = await api.post('/rental-pricing', rentalBody, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                if (rentalResponse.status === 201) {
-                    alert('Төсөл болон үнэлгээ амжилттай нэмэгдлээ!');
-                } else {
-                    alert('Төсөл үүссэн ч үнэлгээ нэмэхэд алдаа гарлаа.');
+                    await api.post('/rental-pricing', rentalBody, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
                 }
             }
+
+            alert('Төсөл болон үнэлгээ амжилттай нэмэгдлээ!');
 
             title.value = '';
             description.value = '';
             category.value = '';
             file.value = null;
             thumbnail.value = null;
-            pricing.value = '';
-            price.value = '';
+
+            list.value = [{ period: 'daily', price: '' }];
+
             if (fileInput.value) fileInput.value.value = '';
             if (thumbnailInput.value) thumbnailInput.value.value = '';
         }
+
     } catch (e) {
         console.error('Алдаа:', e);
         alert('Төсөл нэмэхэд алдаа гарлаа');
@@ -194,6 +194,7 @@ async function deleteSection(index) {
     display: flex;
     gap: 1rem;
     justify-content: flex-start;
+    margin-bottom: 0.5rem;
 }
 
 textarea,
