@@ -214,7 +214,7 @@ textarea {
 #button {
     max-width: 200px;
     margin-left: auto;
-    background-color: var(--green);
+    background-color: var(--orange);
     padding: 0.8rem 1.3rem;
     border: none;
     border-radius: 0.5rem;

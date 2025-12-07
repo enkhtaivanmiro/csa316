@@ -80,8 +80,6 @@ onBeforeMount(async () => {
   project.value = res.data
   Object.assign(project.value, { price: price.data })
 
-  console.log(project)
-
   if (project.value.image_urls?.length) {
     images.value = project.value.image_urls.map((url, index) => ({
       id: index + 1,
