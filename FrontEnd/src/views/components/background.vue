@@ -1,6 +1,6 @@
 <template>
     <div class="background">
-        <div class="ellipse"></div>
+        <!-- <div class="ellipse"></div> -->
         <div class="content">
             <slot></slot>
         </div>
@@ -18,10 +18,10 @@
 
 .ellipse {
     position: absolute;
-    width: 594px;
-    height: 622px;
+    width: 400px;
+    height: 400px;
     left: 50%;
-    top: -450px;
+    top: -200px;
     transform: translateX(-50%);
     background: var(--orange);
     filter: blur(350px);

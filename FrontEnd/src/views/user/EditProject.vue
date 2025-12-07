@@ -7,7 +7,7 @@
                 <Userbar></Userbar>
             </div>
             <Info>
-                <form @submit.prevent="AddProject">
+                <form @submit.prevent="UpdateProject">
                     <div class="section">
                         <label for="title">Төслийн нэр*</label>
                         <input type="text" v-model="title" required placeholder="Төслийн нэр........">
@@ -43,22 +43,23 @@
                         </li>
 
                         <button type="button" @click="addSection" :disabled="list.length === 3">Нэмэх</button>
-
                     </ul>
 
                     <div class="section">
                         <label for="files">Файл оруулах</label>
                         <input type="file" name="files" @change="handleFileUpload" ref="fileInput">
+                        <p v-if="currentFileName" class="current-file">Одоогийн файл: {{ currentFileName }}</p>
                     </div>
 
                     <div class="section">
                         <label for="thumbnail">Зураг оруулах</label>
                         <input type="file" name="thumbnail" @change="handleThumbnailUpload" ref="thumbnailInput"
                             accept="image/*">
+                        <img v-if="currentThumbnail" :src="currentThumbnail" alt="Current thumbnail" class="thumbnail-preview">
                     </div>
 
                     <button type="submit" id="button" class="header_list">
-                        Оруулах
+                        Шинэчлэх
                     </button>
                 </form>
             </Info>
@@ -69,6 +70,7 @@
 
 <script setup>
 import { onBeforeMount, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import Background from '../components/background.vue';
 import Footer from '../components/footer.vue';
 import Navbar from '../components/navbar.vue';
@@ -79,24 +81,23 @@ import { inject } from 'vue';
 import { jwtDecode } from 'jwt-decode';
 
 const api = inject('api');
-
-const user = ref('');
-const userID = ref('');
+const route = useRoute();
+const projectId = ref(route.params.id);
 
 const title = ref('');
 const description = ref('');
 const category = ref('');
+const user = ref('');
+const userID = ref('');
 const file = ref(null);
 const thumbnail = ref(null);
 const fileInput = ref(null);
 const thumbnailInput = ref(null);
+const currentFileName = ref('');
+const currentThumbnail = ref('');
 
-const categories = ref(null)
-
-const period = ref('')
-const price = ref('')
-
-const list = ref([{ period: 'daily', price: '' }])
+const categories = ref(null);
+const list = ref([{ period: 'daily', price: '' }]);
 
 const token = localStorage.getItem('authToken');
 
@@ -106,9 +107,48 @@ onBeforeMount(async () => {
     user.value = decoded.username;
     userID.value = decoded.sub;
 
-    const category = await api.get('/categories')
-    categories.value = category.data
+    const categoryResponse = await api.get('/categories');
+    categories.value = categoryResponse.data;
+
+    await loadProjectDetails();
 });
+
+async function loadProjectDetails() {
+    try {
+        const projectResponse = await api.get(`/projects/${projectId.value}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        const project = projectResponse.data;
+        title.value = project.title;
+        description.value = project.description;
+        category.value = project.category_id;
+        currentFileName.value = project.file_url ? project.file_url.split('/').pop() : '';
+        currentThumbnail.value = project.thumbnail;
+
+        try {
+            const rentalResponse = await api.get(`/rental-pricing?project_id=${projectId.value}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (rentalResponse.data && rentalResponse.data.length > 0) {
+                list.value = rentalResponse.data.map(item => ({
+                    id: item.id,
+                    period: item.type,
+                    price: item.price.toString()
+                }));
+            }
+        } catch (e) {
+            console.log('No rental pricing found');
+        }
+    } catch (e) {
+        console.error('Error loading project:', e);
+    }
+}
 
 function handleFileUpload(event) {
     file.value = event.target.files[0];
@@ -116,9 +156,16 @@ function handleFileUpload(event) {
 
 function handleThumbnailUpload(event) {
     thumbnail.value = event.target.files[0];
+    if (event.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            currentThumbnail.value = e.target.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
 }
 
-async function AddProject() {
+async function UpdateProject() {
     try {
         const formData = new FormData();
 
@@ -136,57 +183,63 @@ async function AddProject() {
             formData.append('thumbnail', thumbnail.value);
         }
 
-        const ProjectResponse = await api.post('/projects', formData, {
+        const projectResponse = await api.put(`/projects/${projectId.value}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${token}`,
             },
         });
 
-        if (ProjectResponse.status === 201) {
-            const project_id = ProjectResponse.data.id;
-
+        if (projectResponse.status === 200) {
             for (const item of list.value) {
-                if (item.period && item.price) {
-                    const rentalBody = {
-                        project_id: project_id,
-                        type: item.period,
-                        price: Number(item.price)
-                    };
+                const rentalBody = {
+                    project_id: projectId.value,
+                    type: item.period,
+                    price: Number(item.price),
+                };
 
+                if (item.id) {
+                    await api.put(`/rental-pricing/${item.id}`, rentalBody, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                } else {
                     await api.post('/rental-pricing', rentalBody, {
-                        headers: { Authorization: `Bearer ${token}` }
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
                     });
                 }
             }
 
-            alert('Төсөл болон үнэлгээ амжилттай нэмэгдлээ!');
-
-            title.value = '';
-            description.value = '';
-            category.value = '';
-            file.value = null;
-            thumbnail.value = null;
-
-            list.value = [{ period: 'daily', price: '' }];
-
-            if (fileInput.value) fileInput.value.value = '';
-            if (thumbnailInput.value) thumbnailInput.value.value = '';
         }
-
     } catch (e) {
         console.error('Алдаа:', e);
-        alert('Төсөл нэмэхэд алдаа гарлаа');
     }
 }
 
 async function addSection() {
-    list.value.push({ period: 'daily', price: '' })
-}
-async function deleteSection(index) {
-    list.value.splice(index, 1)
+    list.value.push({ period: 'daily', price: '' });
 }
 
+async function deleteSection(index) {
+    const item = list.value[index];
+    
+    if (item.id) {
+        try {
+            await api.delete(`/rental-pricing/${item.id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+        } catch (e) {
+            console.error('Error deleting pricing:', e);
+        }
+    }
+    
+    list.value.splice(index, 1);
+}
 </script>
 
 <style scoped>
@@ -194,7 +247,6 @@ async function deleteSection(index) {
     display: flex;
     gap: 1rem;
     justify-content: flex-start;
-    margin-bottom: 0.5rem;
 }
 
 textarea,
@@ -215,7 +267,7 @@ textarea {
 #button {
     max-width: 200px;
     margin-left: auto;
-    background-color: var(--orange);
+    background-color: var(--green);
     padding: 0.8rem 1.3rem;
     border: none;
     border-radius: 0.5rem;
@@ -283,5 +335,19 @@ form {
     background-color: transparent;
     border: 0;
     cursor: pointer;
+}
+
+.current-file {
+    font-size: 0.875rem;
+    color: var(--secondary-text);
+    margin-top: 0.5rem;
+}
+
+.thumbnail-preview {
+    max-width: 200px;
+    max-height: 200px;
+    margin-top: 0.5rem;
+    border-radius: 0.4rem;
+    border: 1px solid var(--primary-text);
 }
 </style>

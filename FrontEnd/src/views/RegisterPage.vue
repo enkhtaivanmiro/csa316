@@ -49,7 +49,6 @@
 
 <script setup>
 import Background from './components/background.vue'
-import Footer from './components/footer.vue'
 import { ref, reactive, inject, watch, computed } from 'vue'
 
 const api = inject('api')
@@ -135,6 +134,7 @@ async function handleRegister() {
     display: flex;
     flex-direction: column;
     text-align: center;
+    padding: 1.2rem 0;
 }
 
 form {

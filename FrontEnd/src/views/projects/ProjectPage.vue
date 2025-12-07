@@ -33,7 +33,7 @@
           </p>
         </div>
         <p v-else>Үнэ тодорхойлогдоогүй</p>
-        <router-link to="/" class="back-button">Буцах</router-link>
+        <router-link to="/" class="back-button">Түрээслэх</router-link>
       </div>
     </div>
     <div v-else class="loading">Төслийг ачааллаж байна...</div>
@@ -79,8 +79,6 @@ onBeforeMount(async () => {
   const price = await api.get(`/rental-pricing/project/${id}`)
   project.value = res.data
   Object.assign(project.value, { price: price.data })
-
-  console.log(project)
 
   if (project.value.image_urls?.length) {
     images.value = project.value.image_urls.map((url, index) => ({
