@@ -11,7 +11,11 @@
                     <p>Түрээсэлсэн төсөл одоогоор байхгүй</p>
                 </template>
                 <template v-else>
-
+                    <ul>
+                        <li v-for="rentedProject in rentedProjects">
+                            
+                        </li>
+                    </ul>
                 </template>
             </Info>
         </div>
@@ -27,7 +31,6 @@ import Userbar from './component/Userbar.vue';
 import { ref, onBeforeMount, inject} from 'vue';
 import { useRoute } from 'vue-router';
 import { jwtDecode } from 'jwt-decode';
-import axios from 'axios';
 
 const api = inject('api')
 
@@ -48,7 +51,7 @@ onBeforeMount(async () => {
         userID.value = decoded.sub
 
         const rentedResponse = await api.get(`/subscription/user/${id}`)
-        rentedProjects.value = rentedProjects.data
+        rentedProjects.value = rentedResponse.data.data
     } catch (e) {
         console.error('error fetching: ', e)
     }
