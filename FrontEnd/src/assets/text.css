@@ -10,7 +10,7 @@
     color: var(--primary-text);
 }
 
-p,h1,h2{
+p,h1,h2,h3,label{
     color: var(--primary-text);
     margin: 0
 }
