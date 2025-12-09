@@ -5,7 +5,7 @@
         </div>
         <div class="title-container">
             <p class="title">{{ title }}</p>
-            <router-link :to="`/categories/${catname}`" class="item-button">
+            <router-link :to="`/projects`" class="item-button">
                 Сонирхох
             </router-link>
         </div>
@@ -36,8 +36,8 @@ defineProps({
 
 .img-container {
     width: 100%;
-    height: 150px;
-    margin-top: 1rem;
+    height: 120px;
+    margin-top: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
