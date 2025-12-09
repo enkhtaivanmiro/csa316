@@ -36,7 +36,8 @@ defineProps({
 
 .img-container {
     width: 100%;
-    height: 180px;
+    height: 150px;
+    margin-top: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -48,7 +49,7 @@ defineProps({
 .card-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     transition: transform 0.3s ease;
 }
 
@@ -66,11 +67,12 @@ defineProps({
     font-weight: 800;
 }
 
-.item-button{
+.item-button {
     color: var(--secondary-text);
     text-align: center;
 }
-.item-button:hover{
+
+.item-button:hover {
     text-decoration: none;
 }
 </style>

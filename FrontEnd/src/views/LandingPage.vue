@@ -18,7 +18,7 @@
         <div id="categories" class="categeory-container">
             <p class="cards-label">Санал болгох ангилал</p>
             <div class="cards-list">
-                <Categorycard v-for="category in categories" :title="category.name" />
+                <Categorycard v-for="(category,i) in categories" :key="i" :title="category.name" :url="icons[i]?.icon" />
             </div>
         </div>
         <div class="categeory-container">
@@ -82,6 +82,14 @@ import { onMounted, inject, ref } from 'vue';
 const api = inject('api')
 const data = ref('')
 const categories = ref('')
+
+const icons = [
+    { id: 1, icon: "/Category/productivity.svg" },
+    { id: 2, icon: "/Category/software.svg" },
+    { id: 3, icon: "/Category/pencil.svg" },
+    { id: 4, icon: "/Category/finance.svg" },
+    { id: 5, icon: "Category/security.svg" },
+]
 
 onMounted(async () => {
     const category = await api.get('/categories')
@@ -155,7 +163,8 @@ h1 {
     border-radius: 0.5rem;
     border: none;
 }
-.intro-button:hover{
+
+.intro-button:hover {
     cursor: pointer;
 }
 
