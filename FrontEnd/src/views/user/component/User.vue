@@ -20,7 +20,7 @@
     max-width: 220px;
     border-radius: 28px;
     background-color: var(--background-color);
-    border: 1px solid var(--secondary-text);
+    border: 2px solid var(--secondary-text);
     text-align: center;
     padding: 1.5rem 0;
     justify-content: center;

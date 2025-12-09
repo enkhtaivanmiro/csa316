@@ -12,8 +12,12 @@
                 </template>
                 <template v-else>
                     <ul>
-                        <li v-for="rentedProject in rentedProjects">
-                            <p>{{ rentedProject.id }}</p>
+                        <li v-for="joined in joinedInfo">
+                            <router-link :to="`/item/${joined.id}`" class="rented-selection">
+                                <p>{{ joined.title }}</p>
+                                <p>Дуусах хугацаа: {{ new Date(joined.subscription.renewal_date).toLocaleDateString() }}
+                                </p>
+                            </router-link>
                         </li>
                     </ul>
                 </template>
@@ -42,6 +46,8 @@ const token = localStorage.getItem('authToken')
 const rentedProjects = ref([])
 const rentedProjectInfo = ref([])
 
+const joinedInfo = ref([])
+
 onBeforeMount(async () => {
     const id = route.params.id
     if (!token) return
@@ -61,8 +67,16 @@ onBeforeMount(async () => {
 
             rentedProjectInfo.value = projectResponses.map(res => res.data)
 
-            console.log('Rented projects with details:', rentedProjects.value)
-            console.log('Rented projects with details:', rentedProjectInfo.value)
+            // console.log('Rented projects with details:', rentedProjects.value)
+            // console.log('Rented projects with details:', rentedProjectInfo.value)
+
+            joinedInfo.value = rentedProjectInfo.value.map(project => {
+                const subscription = rentedProjects.value.find(
+                    sub => sub.project_id === project.id
+                )
+                return { ...project, subscription }
+            })
+            // console.log(joinedInfo)
         }
     } catch (e) {
         console.error('error fetching: ', e)
@@ -80,5 +94,18 @@ onBeforeMount(async () => {
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
+}
+
+.rented-selection {
+    display: block;
+    background-color: var(--background-color);
+    border-radius: 0.5rem;
+    padding: 1rem 0.6rem;
+    border: 2px solid var(--primary-text);
+    text-decoration: none;
+}
+
+.rented-selection:hover {
+    background-color: var(--cards);
 }
 </style>
