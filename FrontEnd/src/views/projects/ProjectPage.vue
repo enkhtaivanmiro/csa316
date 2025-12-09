@@ -113,7 +113,7 @@ onBeforeMount(async () => {
 }
 
 .desc {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: var(--secondary-text);
 }
 

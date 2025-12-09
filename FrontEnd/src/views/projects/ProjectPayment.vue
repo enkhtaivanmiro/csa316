@@ -2,9 +2,9 @@
     <Background>
         <Navbar />
         <div class="container">
-            <p>{{ projectData.title }}</p>
+            <p>Төслийн нэр: {{ projectData.title }}</p>
             <div v-if="priceData.length">
-                <h3>Түрээсийн үнэ:</h3>
+                <h3>Түрээсийн хугацаагаа сонгоно уу</h3>
                 <ul>
                     <label>Түрээслэх хугацаа</label>
                     <select v-model="selectedType">
@@ -67,7 +67,7 @@ const priceData = ref('')
 
 const selectedType = ref('')
 
-const paymentMethod = ref("card");
+const paymentMethod = ref(``)
 
 const errorMessage = ref('')
 
