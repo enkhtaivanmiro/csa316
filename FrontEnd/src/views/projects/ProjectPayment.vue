@@ -128,7 +128,7 @@ async function rentProject() {
     })
 
     if(rentResponse.status === 201){
-        router.push(`/profile/${userID}/rented`)
+        router.push(`/profile/${userID.value}/rented`)
     }
 }
 </script>
