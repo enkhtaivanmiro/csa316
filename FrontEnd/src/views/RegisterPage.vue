@@ -211,12 +211,13 @@ li.ok {
 }
 
 #button {
-    background-color: var(--green);
+    background-color: var(--orange);
     padding: 0.8rem 1.3rem;
     border: none;
     border-radius: 0.5rem;
     margin: 15px auto;
     display: block;
+    cursor: pointer;
 }
 
 #button:hover {

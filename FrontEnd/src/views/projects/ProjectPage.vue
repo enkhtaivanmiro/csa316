@@ -33,7 +33,7 @@
           </p>
         </div>
         <p v-else>Үнэ тодорхойлогдоогүй</p>
-        <router-link to="/" class="back-button">Түрээслэх</router-link>
+        <router-link :to="`/projects/rent/${route.params.id}`" class="back-button">Түрээслэх</router-link>
       </div>
     </div>
     <div v-else class="loading">Төслийг ачааллаж байна...</div>
@@ -113,7 +113,7 @@ onBeforeMount(async () => {
 }
 
 .desc {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: var(--secondary-text);
 }
 
@@ -122,7 +122,7 @@ onBeforeMount(async () => {
   margin-top: 1rem;
   text-decoration: none;
   color: white;
-  background-color: var(--green);
+  background-color: var(--orange);
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
 }

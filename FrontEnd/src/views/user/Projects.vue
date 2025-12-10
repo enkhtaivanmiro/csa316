@@ -7,42 +7,50 @@
                 <Userbar></Userbar>
             </div>
             <Info>
-                <ul>
-                    <li v-for="value in projects" :key="value.id" class="projects-list">
-                        <div class="project-info">
-                            <p class="title">{{ value.title }}</p>
-                            <p class="price">
-                                <template v-if="value.price && value.price.length">
-                                    <span v-for="p in value.price.price" :key="p.id">
-                                        {{ p.price.toLocaleString() }}₮ / {{ p.type }}
-                                    </span>
-                                </template>
-                                <template v-else>Үнэ ороогүй</template>
-                            </p>
-                        </div>
+                <template v-if="projects.length === 0">
+                    <p>
+                        Та ямар нэгэн төсөл оруулаагүй байна....
+                    </p>
+                </template>
+                <template v-else>
+                    <ul>
+                        <li v-for="value in projects" :key="value.id" class="projects-list">
+                            <div class="project-info">
+                                <p class="title">{{ value.title }}</p>
+                                <p class="price">
+                                    <template v-if="value.price && value.price.length">
+                                        <span v-for="p in value.price.price" :key="p.id">
+                                            {{ p.price.toLocaleString() }}₮ / {{ p.type }}
+                                        </span>
+                                    </template>
+                                    <template v-else>Үнэ ороогүй</template>
+                                </p>
+                            </div>
 
 
-                        <div class="actions">
-                            <router-link :to="`/projects/edit/${value.id}`"><img src="/edit.svg" alt="edit"></router-link>
-                            <button id="show-modal" @click="showModal = true"><img src="/delete.svg" alt="delete"
-                                    class="delete"></button>
-                        </div>
-                        <Teleport to="body">
-                            <modal :show="showModal" @close="showModal = false">
-                                <template #header>
-                                    <h3>Та төслийг устгахдаа итгэлтэй байна уу?</h3>
-                                </template>
-                                <template #body>
-                                    <div class="modal-option">
-                                        <button @click="showModal = false" class="confirmation">Үгүй</button>
-                                        <button @click="deleteProject(value.id)" class="confirmation"
-                                            style="background-color: var(--green);">Тийм</button>
-                                    </div>
-                                </template>
-                            </modal>
-                        </Teleport>
-                    </li>
-                </ul>
+                            <div class="actions">
+                                <router-link :to="`/projects/edit/${value.id}`"><img src="/edit.svg"
+                                        alt="edit"></router-link>
+                                <button id="show-modal" @click="showModal = true"><img src="/delete.svg" alt="delete"
+                                        class="delete"></button>
+                            </div>
+                            <Teleport to="body">
+                                <modal :show="showModal" @close="showModal = false">
+                                    <template #header>
+                                        <h3>Та төслийг устгахдаа итгэлтэй байна уу?</h3>
+                                    </template>
+                                    <template #body>
+                                        <div class="modal-option">
+                                            <button @click="showModal = false" class="confirmation">Үгүй</button>
+                                            <button @click="deleteProject(value.id)" class="confirmation"
+                                                style="background-color: var(--green);">Тийм</button>
+                                        </div>
+                                    </template>
+                                </modal>
+                            </Teleport>
+                        </li>
+                    </ul>
+                </template>
             </Info>
         </div>
         <Footer />
@@ -108,7 +116,13 @@ onBeforeMount(async () => {
         )
         projects.value = projectPrice
     } catch (e) {
-        console.error('error fetching: ', e)
+        if (e.response && e.response.status === 404) {
+            console.warn("Хэрэглэгчийн төсөл олдсонгүй")
+            projects.value = []
+        } else {
+            console.error('error fetching: ', e)
+        }
+        return
     }
 })
 

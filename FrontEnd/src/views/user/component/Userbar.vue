@@ -10,6 +10,9 @@
             <RouterLink :to="`/profile/${userID}/sales`">Миний орлого</RouterLink>
         </li>
         <li>
+            <RouterLink :to="`/profile/${userID}/rented`">Миний түрээсэлсэн</RouterLink>
+        </li>
+        <li>
             <RouterLink :to="`/profile/${userID}/create`">Төсөл оруулах</RouterLink>
         </li>
         <li>
@@ -57,7 +60,7 @@ function logout(){
     max-width: 220px;
     border-radius: 28px;
     padding: 20px 20px;
-    border: 1px solid var(--secondary-text);
+    border: 2px solid var(--secondary-text);
 }
 
 .navigation-container a {

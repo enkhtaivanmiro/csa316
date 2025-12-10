@@ -5,7 +5,6 @@
     </div>
     <ul class="nav-center">
       <li><router-link to="/projects" class="header_list">Шийдлүүд</router-link> </li>
-      <li><router-link to="/" class="header_list">Үнийн санал</router-link> </li>
       <li><router-link to="/" class="header_list">Бидний тухай</router-link> </li>
       <li><router-link to="/" class="header_list">Холбогдох</router-link> </li>
     </ul>
