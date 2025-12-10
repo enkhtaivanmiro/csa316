@@ -4,9 +4,18 @@
         <div class="container">
             <div class="user-container">
                 <User :user="user"></User>
-                <Userbar></Userbar>
+                <Userbar>
+                </Userbar>
             </div>
             <Info>
+                <div>
+                    <p class="text">Хэрэглэгчийн нэр</p>
+                    <p class="info">{{ user }}</p>
+                </div>
+                <div>
+                    <p class="text">Цахим шуудан</p>
+                    <p class="info">{{ email }}</p>
+                </div>
             </Info>
         </div>
         <Footer />
@@ -15,7 +24,7 @@
 <script setup>
 import { ref, inject, onBeforeMount } from 'vue'
 import { jwtDecode } from 'jwt-decode';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 
 import Background from '../components/background.vue';
 import Navbar from '../components/navbar.vue';
@@ -29,7 +38,7 @@ const route = useRoute()
 
 const user = ref('')
 const email = ref('')
-let userID = ref('')
+const userID = ref('')
 
 
 const token = localStorage.getItem('authToken')
@@ -37,6 +46,21 @@ const token = localStorage.getItem('authToken')
 onBeforeMount(async () => {
     const id = route.params.id
     if (!token) return
+
+    try {
+        const decoded = jwtDecode(token)
+        userID.value = decoded.sub
+        const res = await api.get(`/users/${userID.value}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+
+        user.value = res.data.username
+        email.value = res.data.email
+    } catch (e) {
+        console.error('error fetching: ', e)
+    }
 })
 </script>
 
